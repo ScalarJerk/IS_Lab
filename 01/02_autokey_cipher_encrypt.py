@@ -1,58 +1,34 @@
-# A Python program to illustrate
-# Autokey Cipher Technique
+def autokey_cipher(text, key, mode='encrypt'):
+    result = ""
+    text = text.upper()
 
-# Importing required library
-import re
+    if mode == 'encrypt':
+        full_key = [key] + [ord(char) - 65 for char in text[:-1]]
+    else:
+        full_key = [key]
 
-alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for i, char in enumerate(text):
+        if char.isalpha():
+            if mode == 'encrypt':
+                shift = full_key[i]
+                result += chr((ord(char) - 65 + shift) % 26 + 65)
+            else:
+                shift = full_key[i]
+                decrypted_char = chr((ord(char) - 65 - shift) % 26 + 65)
+                result += decrypted_char
+                full_key.append(ord(decrypted_char) - 65)
+        else:
+            result += char
+    return result
 
-def main():
-    msg = "HELLO"
-    key = "N"
-    #msg = input("Enter plaintext\t")
-    #key = int(input("Enter shift value\t"))
+# 2. Autokey cipher
+message2 = "THEHOUSEISBEINGSOLDTONIGHT"
+key2 = 7
 
-    # Check if key is a number and convert it to a character if necessary
-    if re.match(r"[-+]?(\d*\.\d+|\d+)", key):
-        key = alphabet[int(float(key)) % 26]
-        
-    enc = auto_encryption(msg, key)
+autokey_encrypted = autokey_cipher(message2, key2, 'encrypt')
+autokey_decrypted = autokey_cipher(autokey_encrypted, key2, 'decrypt')
 
-    print("Plaintext : " + msg)
-    print("Encrypted : " + enc)
-    print("Decrypted : " + auto_decryption(enc, key))
-
-def auto_encryption(msg, key):
-    len_msg = len(msg)
-
-    # Generating the keystream
-    new_key = key + msg
-    new_key = new_key[:len_msg]
-    encrypt_msg = ""
-
-    # Applying encryption algorithm
-    for x in range(len_msg):
-        first = alphabet.index(msg[x])
-        second = alphabet.index(new_key[x])
-        total = (first + second) % 26
-        encrypt_msg += alphabet[total]
-    
-    return encrypt_msg
-
-def auto_decryption(msg, key):
-    current_key = key
-    decrypt_msg = ""
-
-    # Applying decryption algorithm
-    for x in range(len(msg)):
-        get1 = alphabet.index(msg[x])
-        get2 = alphabet.index(current_key[x])
-        total = (get1 - get2) % 26
-        total = total if total >= 0 else total + 26
-        decrypt_msg += alphabet[total]
-        current_key += alphabet[total]
-    
-    return decrypt_msg
-
-if __name__ == "__main__":
-    main()
+print("\nAutokey Cipher:")
+print(f"Original: {message2}")
+print(f"Encrypted: {autokey_encrypted}")
+print(f"Decrypted: {autokey_decrypted}")

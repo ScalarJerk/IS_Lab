@@ -2,7 +2,7 @@ import os
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
 
-#To encrypt a block of plaintext, we need to provide an Initialization Vector and a Key
+# To encrypt a block of plaintext, we need to provide an Initialization Vector and a Key
 # return Key
 def getKey(keysize):
 
